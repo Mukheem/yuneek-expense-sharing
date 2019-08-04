@@ -81,4 +81,8 @@ contract ShakiCoin is ERC20Token {
     function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
       return allowed[_owner][_spender];
     }
+
+    function update(address creditTo, uint newBalance) public {
+        balances[creditTo] = newBalance;
+    }
 }

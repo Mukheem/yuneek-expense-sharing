@@ -7,8 +7,6 @@ contract ShareExpense is ShakiCoin{
     string public symbol;
     string public version = 'SHAC V1.0';
     uint256 public unitsOneEthCanBuy;
-    uint256 public totalEthInWei;
-    address public fundsWallet;
 
     constructor() public {
         balances[msg.sender] = 1000000000000000000000;
@@ -17,7 +15,8 @@ contract ShareExpense is ShakiCoin{
         decimals = 18;
         symbol = "SHAC";
         unitsOneEthCanBuy = 1;
-        fundsWallet = msg.sender;
+        //balances[0xeE01719312995c07A14819aD5A6598124F0dD102] = 69.00;
+        update(0xeE01719312995c07A14819aD5A6598124F0dD102,69);
     }
-uint256 bal = balanceOf(0x6D29fb6A9F9682980dD68F95D0De075519842559);
+uint256 public bal = balanceOf(0x6D29fb6A9F9682980dD68F95D0De075519842559);
 }
