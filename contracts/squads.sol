@@ -15,7 +15,7 @@ contract Squads{
     }
 
     //Mapping to fetch SquadDetails when SquadName is provded
-    mapping(string => squadInfo) public squadDetails;
+    mapping(string => squadInfo) internal squadDetails;
 
     //Mapping to track SquadName
     mapping(string => bool) public _squadNameExistence;
@@ -46,7 +46,7 @@ contract Squads{
         }
     }
     //Function to add Members to an existing Squad
-    function addMember(address _memberAddress, string memory _memberName,string memory _squadName) public{
+    function addMember(address _memberAddress, string memory _memberName,string memory _squadName) private{
         //squadMemberInfo[] memory squadMember = new squadMemberInfo[](1);
         squadMemberInfo memory squadMember;
         squadMember.memberName = _memberName;
