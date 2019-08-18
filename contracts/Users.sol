@@ -34,6 +34,10 @@ contract Users{
     }
     //Mapping to fetch userDetails basis on UserName
     mapping(bytes32 => userInfo) public userDetails;
+
+    //Mapping to userName and Address. - To be used when adding a member to a Squad
+    mapping(address => bytes32) private userAddressToUsername;
+
     //Modifier to check if UserName is already in use
     modifier isUsernameAvailable(bytes32 _userName){
         require(
@@ -64,6 +68,22 @@ contract Users{
         userDetails[_username].userEmailId = _mailid;
         userDetails[_username].userContactNumber = _contactNumber;
         userDetails[_username].isUsed = true;
+        userAddressToUsername[_address] = _username;
         return userDetails[_username].isUsed;
     }
+
+    //Function to return username of an Address.
+    function getUserNameFromAddress(address _address) public view returns(string memory _userName){
+      return bytes32ToString(userAddressToUsername[_address]);
+    }
+
+    //Function to Convert Bytes32 to String
+    function bytes32ToString(bytes32 _bytes32) public pure returns (string memory convertedString){
+        bytes memory bytesArray = new bytes(32);
+        for (uint256 i; i < 32; i++) {
+            bytesArray[i] = _bytes32[i];
+        }
+        return string(bytesArray);
+    }
+
 }
