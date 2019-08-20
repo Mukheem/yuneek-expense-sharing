@@ -15,9 +15,11 @@ contract Squads{
         address createdBy;
         squadMemberInfo[] squadMembers;
     }
-    
+     //Users user;
     event AddedSquadMember(squadMemberInfo who);
     event SquadCreatedBy(address creator,string SquadName);
+    event MyBytes(bytes32 MyBites);
+    event MyAddress(address MyAddr);
 
     //Mapping to fetch SquadDetails when SquadName is provided
     mapping(string => squadInfo) public squadDetails;
@@ -57,7 +59,11 @@ contract Squads{
     function addMember(address _memberAddress,string memory _squadName) public
     isSquadMemeberAddressExists( _memberAddress,_squadName){
         //Using an Instance of Users contract to get the userName
-        Users user = Users(0xe3632B9aB0571d2601e804DfDDc65EB51AB19310);
+     // Users user = Users(addressOfUsers);
+     //Users u = new Users();
+    // emit MyAddress(u.thisAddress);
+       Users user = Users(0x8609a0806279C94Bcc5432E36B57281b3d524B9B);
+     // Users user = (new Users).value(msg.value)(address(msg.sender));
         string memory  _memberName = user.getUserNameFromAddress(_memberAddress);
         squadMemberInfo memory squadMember;
         squadMember.memberName = _memberName;
@@ -67,6 +73,7 @@ contract Squads{
         squadDetails[_squadName].squadMembers.push(squadMember);
         emit AddedSquadMember(squadMember);
     }
+
     
     function getSquadMembers(string memory _squadname) public view returns(squadMemberInfo[] memory squadMembers){
         return squadDetails[_squadname].squadMembers;

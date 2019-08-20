@@ -2,7 +2,10 @@ pragma solidity ^0.5.9;
 pragma experimental ABIEncoderV2;
 
 contract Users{
-
+    address public thisAddress;
+    constructor() public{
+        thisAddress = address(this);
+    }
     struct userOwes{
         address lenderAddress;
         string lenderName;
@@ -36,7 +39,7 @@ contract Users{
     mapping(bytes32 => userInfo) public userDetails;
 
     //Mapping to userName and Address. - To be used when adding a member to a Squad
-    mapping(address => bytes32) private userAddressToUsername;
+    mapping(address => bytes32) public userAddressToUsername;
 
     //Modifier to check if UserName is already in use
     modifier isUsernameAvailable(bytes32 _userName){
@@ -73,7 +76,7 @@ contract Users{
     }
 
     //Function to return username of an Address.
-    function getUserNameFromAddress(address _address) public view returns(string memory _userName){
+    function getUserNameFromAddress(address _address) public view returns(string memory  _userName){
       return bytes32ToString(userAddressToUsername[_address]);
     }
 
