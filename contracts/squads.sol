@@ -2,7 +2,7 @@ pragma solidity ^0.5.9;
 pragma experimental ABIEncoderV2;
 import "./Users.sol";
 
-contract Squads{
+contract Squads is Users{
 
     struct squadMemberInfo{
         string memberName;
@@ -74,5 +74,36 @@ contract Squads{
 
     function getSquadNamesOfAnAddress(address _address) public view returns(string[] memory _squadNames){
         return addressToSquadNames[_address];
+    }
+    function shareExpenditure(
+       string memory _spentBy,
+       string memory _shareAmongMembersOf,
+       uint _amountToBeShared,
+       bytes32  units
+    ) public{
+       squadMemberInfo[] memory squadMembers = getSquadMembers(_shareAmongMembersOf);
+       
+        uint _totalMembers = squadMembers.length;
+       // squadMemberInfo[] memory squadMembers =  squadDetails[_shareAmongMembersOf].squadMembers;
+        uint _sharePerHead = _amountToBeShared/_totalMembers;
+        address _spentByAddress = getAddressFromuserName(stringToBytes32(_spentBy));
+        for(uint i = 0; i < _totalMembers; i++){
+            userOwes memory debts;
+            debts.lenderAddress = _spentByAddress;
+            debts.lenderName = _spentBy;
+            debts.amountToPay = _sharePerHead;
+            debts.units = units;
+            debts.isActive = true;
+            if(squadMembers[i].memberAddress != _spentByAddress){
+                userDetails[stringToBytes32(squadMembers[i].memberName)].debts.push(debts);
+                userLoans memory loans;
+                loans.borrowerAddress = squadDetails[_shareAmongMembersOf].squadMembers[i].memberAddress;
+                loans.borrowerName = squadDetails[_shareAmongMembersOf].squadMembers[i].memberName;
+                loans.amountToGetback = _sharePerHead;
+                loans.units = units;
+                loans.isActive = true;
+                userDetails[stringToBytes32(_spentBy)].loans.push(loans);
+            }
+        }
     }
 }

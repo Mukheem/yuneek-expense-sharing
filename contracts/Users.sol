@@ -100,4 +100,11 @@ contract Users{
             result := mload(add(source, 32))
         }
 }
+  function returnDebts(string memory _name) public view returns(userOwes[] memory _allDebts){
+        return userDetails[stringToBytes32(_name)].debts;
+    }
+    function returnAdjustments(string memory _name) public view returns(userLoans[] memory _allLoans){
+        return userDetails[stringToBytes32(_name)].loans;
+    }
+    
 }
