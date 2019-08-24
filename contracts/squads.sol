@@ -18,6 +18,8 @@ contract Squads is Users{
     
     event AddedSquadMember(squadMemberInfo who);
     event SquadCreatedBy(address creator,string SquadName);
+     //Using an Instance of Users contract to get the userName
+    Users user = Users(0xe3632B9aB0571d2601e804DfDDc65EB51AB19310);
 
     //Mapping to fetch SquadDetails when SquadName is provided
     mapping(string => squadInfo) public squadDetails;
@@ -56,8 +58,7 @@ contract Squads is Users{
     //Function to add Members to an existing Squad
     function addMember(address _memberAddress,string memory _squadName) public
     isSquadMemeberAddressExists( _memberAddress,_squadName){
-        //Using an Instance of Users contract to get the userName
-        Users user = Users(0xe3632B9aB0571d2601e804DfDDc65EB51AB19310);
+       
         string memory  _memberName = user.getUserNameFromAddress(_memberAddress);
         squadMemberInfo memory squadMember;
         squadMember.memberName = _memberName;
@@ -86,7 +87,7 @@ contract Squads is Users{
         uint _totalMembers = squadMembers.length;
        // squadMemberInfo[] memory squadMembers =  squadDetails[_shareAmongMembersOf].squadMembers;
         uint _sharePerHead = _amountToBeShared/_totalMembers;
-        address _spentByAddress = getAddressFromuserName(stringToBytes32(_spentBy));
+        address _spentByAddress = user.getAddressFromuserName(stringToBytes32(_spentBy));
         for(uint i = 0; i < _totalMembers; i++){
             userOwes memory debts;
             debts.lenderAddress = _spentByAddress;
