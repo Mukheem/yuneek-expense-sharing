@@ -16,9 +16,10 @@ contract Squads is Users{
         squadMemberInfo[] squadMembers;
     }
     
-    event AddedSquadMember(squadMemberInfo who);
-    event SquadCreatedBy(address creator,string SquadName);
-     //Using an Instance of Users contract to get the userName
+    event AddedSquadMember(squadMemberInfo who); //Logger to note down once a Member is added to the Squad.
+    event SquadCreatedBy(address creator,string SquadName); //To log who created the squad. Might be useful somewhere down the line.
+    
+    //Using an Instance of Users contract to get the userName
     Users user = Users(0xe3632B9aB0571d2601e804DfDDc65EB51AB19310);
 
     //Mapping to fetch SquadDetails when SquadName is provided
@@ -68,24 +69,26 @@ contract Squads is Users{
         squadDetails[_squadName].squadMembers.push(squadMember);
         emit AddedSquadMember(squadMember);
     }
-    
+    //Function returns all the Members of a squad.
     function getSquadMembers(string memory _squadname) public view returns(squadMemberInfo[] memory squadMembers){
         return squadDetails[_squadname].squadMembers;
     }
-
+    //Function to get all the squad names in which an Address is a part of.
     function getSquadNamesOfAnAddress(address _address) public view returns(string[] memory _squadNames){
         return addressToSquadNames[_address];
     }
+    
+    //to cater the division of amounts among the squad members.
     function shareExpenditure(
        string memory _spentBy,
        string memory _shareAmongMembersOf,
        uint _amountToBeShared,
+       string memory _description,
        bytes32  units
     ) public{
        squadMemberInfo[] memory squadMembers = getSquadMembers(_shareAmongMembersOf);
        
         uint _totalMembers = squadMembers.length;
-       // squadMemberInfo[] memory squadMembers =  squadDetails[_shareAmongMembersOf].squadMembers;
         uint _sharePerHead = _amountToBeShared/_totalMembers;
         address _spentByAddress = user.getAddressFromuserName(stringToBytes32(_spentBy));
         for(uint i = 0; i < _totalMembers; i++){
@@ -94,6 +97,7 @@ contract Squads is Users{
             debts.lenderName = _spentBy;
             debts.amountToPay = _sharePerHead;
             debts.units = units;
+            debts.description = _description;
             debts.isActive = true;
             if(squadMembers[i].memberAddress != _spentByAddress){
                 userDetails[stringToBytes32(squadMembers[i].memberName)].debts.push(debts);
@@ -101,6 +105,7 @@ contract Squads is Users{
                 loans.borrowerAddress = squadDetails[_shareAmongMembersOf].squadMembers[i].memberAddress;
                 loans.borrowerName = squadDetails[_shareAmongMembersOf].squadMembers[i].memberName;
                 loans.amountToGetback = _sharePerHead;
+                loans.description = _description;
                 loans.units = units;
                 loans.isActive = true;
                 userDetails[stringToBytes32(_spentBy)].loans.push(loans);

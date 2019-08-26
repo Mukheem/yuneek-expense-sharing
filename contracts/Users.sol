@@ -2,19 +2,22 @@ pragma solidity ^0.5.9;
 pragma experimental ABIEncoderV2;
 
 contract Users{
-
+    //To hold all the required fields for A DEBT
     struct userOwes{
         address lenderAddress;
         string lenderName;
         string lenderFullName;
+        string description;
         bool isActive;
         uint amountToPay;
         bytes32 units;
     }
+    //To hold all the required fields for A LOAN
     struct userLoans{
         address borrowerAddress;
         string borrowerName;
         string borrowerFullName;
+        string description;
         bool isActive;
         uint amountToGetback;
         bytes32 units;
@@ -76,7 +79,7 @@ contract Users{
     function getUserNameFromAddress(address _address) public view returns(string memory _userName){
       return bytes32ToString(userAddressToUsername[_address]);
     }
-
+    //Function to get Address from a UserName
     function getAddressFromuserName(bytes32 _userName) public view returns(address _address){
         return userDetails[_userName].userAddress;
     }
@@ -99,10 +102,12 @@ contract Users{
         assembly {
             result := mload(add(source, 32))
         }
-}
-  function returnDebts(string memory _name) public view returns(userOwes[] memory _allDebts){
+    }
+    //Function to return all the User's debts.
+    function returnDebts(string memory _name) public view returns(userOwes[] memory _allDebts){
         return userDetails[stringToBytes32(_name)].debts;
     }
+    //Function to return all the User's Loans.
     function returnAdjustments(string memory _name) public view returns(userLoans[] memory _allLoans){
         return userDetails[stringToBytes32(_name)].loans;
     }
