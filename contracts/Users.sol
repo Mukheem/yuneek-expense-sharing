@@ -106,5 +106,4 @@ contract Users{
     function returnAdjustments(string memory _name) public view returns(userLoans[] memory _allLoans){
         return userDetails[stringToBytes32(_name)].loans;
     }
-    
 }
